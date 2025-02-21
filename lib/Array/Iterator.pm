@@ -120,10 +120,13 @@ sub new {
 sub _init {
 	my ($self, $length, $iteratee) = @_;
 	(defined($length) && defined($iteratee))
-        || die 'Insufficient Arguments: you must provide an length and an iteratee';
+		|| die 'Insufficient Arguments: you must provide an length and an iteratee';
 	$self->{_current_index} = 0;
 	$self->{_length} = $length;
-	$self->{_iteratee} = $iteratee;
+	# $self->{_iteratee} = $iteratee;
+
+	# Store a private copy to prevent modifications
+	$self->{_iteratee} = [@{$iteratee}];
 }
 
 =head2 _current_index
@@ -157,8 +160,8 @@ sub _iteratee {
 # to a protected one, and check our access
 # as well
 sub _getItem {
-    (UNIVERSAL::isa((caller)[0], __PACKAGE__))
-        || die 'Illegal Operation: This method can only be called by a subclass';
+	(UNIVERSAL::isa((caller)[0], __PACKAGE__)) || die 'Illegal Operation: This method can only be called by a subclass';
+
 	my ($self, $iteratee, $index) = @_;
 	return $iteratee->[$index];
 }
@@ -239,9 +242,10 @@ will be thrown.
 =cut
 
 sub next {
-	my ($self) = @_;
-	    ($self->{_current_index} < $self->{_length})
-        || die 'Out Of Bounds: no more elements';
+	my $self = shift;
+
+	($self->{_current_index} < $self->{_length}) || die 'Out Of Bounds: no more elements';
+
         $self->{_iterated} = 1;
 	return $self->_getItem($self->{_iteratee}, $self->{_current_index}++);
 }
