@@ -18,3 +18,4 @@ t/exceptions.t
 t/iterator.t
 t/pod-coverage.t
 t/reusable.t
+t/rt126034.t
