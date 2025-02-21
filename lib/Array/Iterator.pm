@@ -13,11 +13,11 @@ Array::Iterator - A simple class for iterating over Perl arrays
 
 =head1 VERSION
 
-Version 0.132
+Version 0.133
 
 =cut
 
-our $VERSION = '0.132';
+our $VERSION = '0.133';
 
 ### constructor
 sub new {
