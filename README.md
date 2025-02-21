@@ -4,7 +4,7 @@ Array::Iterator - A simple class for iterating over Perl arrays
 
 # VERSION
 
-Version 0.133
+Version 0.134
 
 # SYNOPSIS
 
@@ -143,15 +143,15 @@ This method can be used to get the current item in the iterator. It is non-destr
 meaning that it does not advance the internal pointer. This value will match the
 last value dispensed by `next` or `get_next`.
 
+## **current\_index**
+
+This method can be used to get the current index in the iterator. It is non-destructive,
+meaning that it does not advance the internal pointer. This value will match the index
+of the last value dispensed by `next` or `get_next`.
+
 # METHODS
 
 ## Public Methods
-
-- **current\_index**
-
-    This method can be used to get the current index in the iterator. It is non-destructive,
-    meaning that it does not advance the internal pointer. This value will match the index
-    of the last value dispensed by `next` or `get_next`.
 
 - **get\_length**
 
@@ -323,6 +323,6 @@ Hey! **The above document had some coding errors, which are explained below:**
 
     Non-ASCII character seen before =encoding in 'Java’s'. Assuming UTF-8
 
-- Around line 327:
+- Around line 335:
 
     '=item' outside of any '=over'
