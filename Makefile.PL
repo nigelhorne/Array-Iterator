@@ -35,7 +35,9 @@ WriteMakefile(
 		},
 	},
 	TEST_REQUIRES => {
+		'Test::DescribeMe' => 0,
 		'Test::Most' => 0,
+		'Test::Needs' => 0,
 	}, dist => $dist,
 	clean => { FILES => 'Array-Iterator-*' },  # Clean up distribution files
 );

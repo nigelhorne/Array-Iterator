@@ -57,24 +57,24 @@ no attempt is made to enforce this (although I will if I can find an efficient
 means of doing so). This class only intends to provide a clear and simple
 means of generic iteration, nothing more (yet).
 
+## **new (@array | $array\_ref | $hash\_ref)**
+
+The constructor can be passed either a plain Perl array, an array reference,
+or a hash reference (with the array specified as a single key of the hash,
+\_\_array\_\_).
+Single-element arrays are not supported by either of the first
+two calling conventions, since it is not possible to distinguish between an
+array of a single-element which happens to be an array reference and an
+array reference of a single element, thus previous versions of the constructor
+would raise an exception. If you expect to pass arrays to the constructor which
+may have only a single element, then the array can be passed as the element
+of a HASH reference, with the key, \_\_array\_\_:
+
+    my $i = Array::Iterator->new({ __array__ => \@array });
+
 # METHODS
 
 ## Public Methods
-
-- **new (@array | $array\_ref | $hash\_ref)**
-
-    The constructor can be passed either a plain Perl array, an array reference,
-    or a hash reference (with the array specified as a single key of the hash,
-    \_\_array\_\_).
-    Single-element arrays are not supported by either of the first
-    two calling conventions, since it is not possible to distinguish between an
-    array of a single-element which happens to be an array reference and an
-    array reference of a single element, thus previous versions of the constructor
-    would raise an exception. If you expect to pass arrays to the constructor which
-    may have only a single element, then the array can be passed as the element
-    of a HASH reference, with the key, \_\_array\_\_:
-
-        my $i = Array::Iterator->new({ __array__ => \@array });
 
 - **has\_next(\[$n\])**
 
