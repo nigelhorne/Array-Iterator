@@ -3,12 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 48;
+use Test::More tests => 51;
 use Test::Exception;
 
-BEGIN {
-    use_ok('Array::Iterator::BiDirectional')
-};
+BEGIN { use_ok('Array::Iterator::BiDirectional') }
 
 my @control = (1 .. 5);
 
@@ -32,6 +30,8 @@ can_ok($iterator, 'get_previous');
 # move our counter to the end
 $iterator->next() while $iterator->hasNext();
 
+ok(!$iterator->hasNext(), 'Have reached the end');
+
 for (my $i = $#control; $i > 0; $i--) {
     # we should still have another one
     ok($iterator->hasPrevious(), '... we have some previous items');
@@ -47,6 +47,10 @@ for (my $i = $#control; $i > 0; $i--) {
     cmp_ok($iterator->previous(), '==', $control[$i],
            '... our control should match our iterator->previous');
 }
+
+# we should have one more
+ok($iterator->hasPrevious(), '... we should have one left');
+cmp_ok($iterator->previous(), '==', 1, 'Back to the start');
 
 # we should have no more
 ok(!$iterator->hasPrevious(), '... we should have no more');
@@ -68,9 +72,8 @@ for (my $i = $iterator2; $i->hasPrevious(); $i->getPrevious()) {
 ok(!defined($iterator2->getPrevious()), '... this should return undef');
 
 throws_ok {
-    $iterator2->previous();
-} qr/Out Of Bounds \: no more elements/, '... this should die if i try again';
-
+	$iterator2->previous();
+} qr/Out Of Bounds\: no more elements/, '... this should die if i try again';
 
 my $iterator3 = Array::Iterator::BiDirectional->new(@control);
 

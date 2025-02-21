@@ -29,7 +29,7 @@ subtest 'Full Iteration' => sub {
 	while ($iterator->has_next()) {
 		push @collected, $iterator->next();
 	}
-	
+
 	is_deeply(\@collected, \@array, 'Iterated elements should match input array');
 	ok(!$iterator->has_next(), 'Iterator should be exhausted');
 	is($iterator->get_next(), undef, 'get_next() should return undef when exhausted');
@@ -39,11 +39,11 @@ subtest 'Full Iteration' => sub {
 subtest 'Peek' => sub {
 	my @array = qw(a b c d e);
 	my $iterator = Array::Iterator->new(@array);
-	
+
 	is($iterator->peek(1), 'a', 'peek(1) should return first element without advancing');
 	is($iterator->next(), 'a', 'next() should return first element after peek');
 	is($iterator->peek(2), 'c', 'peek(2) should return the second element ahead');
-	
+
 	lives_ok { $iterator->peek(10) } 'Peeking out of bounds no longer dies';
 	ok(!defined($iterator->peek(10)));
 };
@@ -52,10 +52,10 @@ subtest 'Peek' => sub {
 subtest 'Reset' => sub {
 	my @array = (100, 200, 300);
 	my $iterator = Array::Iterator->new(@array);
-	
+
 	$iterator->next();
 	$iterator->reset();
-	
+
 	is($iterator->current_index(), 0, 'After reset, index should be 0');
 	is($iterator->next(), 100, 'After reset, next() should return the first element again');
 };
@@ -72,7 +72,7 @@ subtest 'Iterator with Hash Reference' => sub {
 	my %hash = (
 		__array__ => [ 'apple', 'banana', 'cherry' ]
 	);
-	
+
 	my $iterator = Array::Iterator->new(\%hash);
 	is($iterator->next(), 'apple', 'Iterator should work with hash reference input');
 };

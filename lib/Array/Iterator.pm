@@ -86,16 +86,14 @@ of a HASH reference, with the key, __array__:
 sub new {
 	my ($_class, @array) = @_;
 
-	(@array)
-		|| die 'Insufficient Arguments: you must provide something to iterate over';
+	(@array) || die 'Insufficient Arguments: you must provide something to iterate over';
 
 	my $class = ref($_class) || $_class;
 	my $_array;
 	if (scalar @array == 1) {
 		if (ref $array[0] eq 'ARRAY') {
 		    $_array = $array[0];
-		}
-		elsif (ref $array[0] eq 'HASH') {
+		} elsif (ref $array[0] eq 'HASH') {
 		    die 'Incorrect type: HASH reference must contain the key __array__'
 		        unless exists $array[0]->{__array__};
 		    die 'Incorrect type: __array__ value must be an ARRAY reference'
@@ -110,7 +108,7 @@ sub new {
 		_current_index => 0,
 		_length => 0,
 		_iteratee => [],
-		_iterated => 0,
+		_iterated => 0,	# -1 when going backwards, +1 when going forwards
         };
 	bless($iterator, $class);
 	$iterator->_init(scalar(@{$_array}), $_array);
@@ -215,11 +213,15 @@ Throws an exception if C<$n> E<lt>= 0.
 sub has_next {
 	my ($self, $n) = @_;
 
-    if(not defined $n) { $n = 1 }
-    elsif(not $n)      { die "has_next(0) doesn't make sense, did you mean current()?" }
-    elsif($n < 0)      { die "has_next() with negative argument doesn't make sense, perhaps you should use a BiDirectional iterator" }
+	if(not defined $n) {
+		$n = 1
+	} elsif(not $n) {
+		die "has_next(0) doesn't make sense, did you mean current()?"
+	} elsif($n < 0) {
+		die "has_next() with negative argument doesn't make sense, perhaps you should use a BiDirectional iterator"
+	}
 
-    my $idx = $self->{_current_index} + ($n - 1);
+	my $idx = $self->{_current_index} + ($n - 1);
 
 	return ($idx < $self->{_length}) ? 1 : 0;
 }
@@ -365,7 +367,7 @@ Reset index to allow iteration from the start
 =cut
 
 sub reset
-{  
+{
 	my $self = shift;
 	$self->{'_current_index'} = 0;
 }
@@ -377,8 +379,9 @@ This is a basic accessor for getting the length of the array being iterated over
 =cut
 
 sub get_length {
-    my ($self) = @_;
-    return $self->{_length};
+	my $self = shift;
+
+	return $self->{_length};
 }
 
 =head2 getLength
@@ -512,6 +515,10 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=head1 PREVIOUS MAINTAINER
+
+Maintained 2017 to 2025 PERLANCAR
 
 =head1 SUPPORT
 

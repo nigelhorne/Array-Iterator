@@ -15,5 +15,7 @@ cmp_ok($iterator->getNext(), 'eq', 'two');
 cmp_ok($iterator->getNext(), 'eq', 'three');
 cmp_ok($iterator->getPrevious(), 'eq', 'two');
 cmp_ok($iterator->getPrevious(), 'eq', 'one');
+ok(!$iterator->hasPrevious(), '... we should have no more');
+ok($iterator->hasNext(), '... we should have more');
 
 done_testing();
