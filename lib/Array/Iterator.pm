@@ -6,10 +6,20 @@ use warnings;
 # AUTHORITY
 # DATE
 # DIST
-# VERSION
+
+=head1 NAME
+
+Array::Iterator - A simple class for iterating over Perl arrays
+
+=head1 VERSION
+
+Version 0.132
+
+=cut
+
+our $VERSION = '0.132';
 
 ### constructor
-
 sub new {
 	my ($_class, @array) = @_;
 	(@array)
