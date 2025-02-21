@@ -9,11 +9,11 @@ Array::Iterator - A simple class for iterating over Perl arrays
 
 =head1 VERSION
 
-Version 0.133
+Version 0.134
 
 =cut
 
-our $VERSION = '0.133';
+our $VERSION = '0.134';
 
 =head1 SYNOPSIS
 
@@ -302,6 +302,14 @@ sub current {
 	return $self->_getItem($self->{_iteratee}, $self->currentIndex());
 }
 
+=head2 B<current_index>
+
+This method can be used to get the current index in the iterator. It is non-destructive,
+meaning that it does not advance the internal pointer. This value will match the index
+of the last value dispensed by C<next> or C<get_next>.
+
+=cut
+
 sub current_index {
 	my ($self) = @_;
 	return ($self->{_current_index} != 0) ? $self->{_current_index} - 1 : 0;
@@ -323,12 +331,6 @@ sub getLength { my $self = shift; $self->get_length(@_) }
 =head1 METHODS
 
 =head2 Public Methods
-
-=item B<current_index>
-
-This method can be used to get the current index in the iterator. It is non-destructive,
-meaning that it does not advance the internal pointer. This value will match the index
-of the last value dispensed by C<next> or C<get_next>.
 
 =item B<get_length>
 

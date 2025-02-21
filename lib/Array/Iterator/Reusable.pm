@@ -12,11 +12,11 @@ use Array::Iterator;
 
 =head1 VERSION
 
-Version 0.133
+Version 0.134
 
 =cut
 
-our $VERSION = '0.133';
+our $VERSION = '0.134';
 
 our @ISA = qw(Array::Iterator);
 
