@@ -66,7 +66,7 @@ no attempt is made to enforce this (although I will if I can find an efficient
 means of doing so). This class only intends to provide a clear and simple
 means of generic iteration, nothing more (yet).
 
-=head2 B<new (@array | $array_ref | $hash_ref)>
+=head2 new (@array | $array_ref | $hash_ref)
 
 The constructor can be passed either a plain Perl array, an array reference,
 or a hash reference (with the array specified as a single key of the hash,
@@ -87,7 +87,8 @@ sub new {
 	my ($_class, @array) = @_;
 
 	(@array)
-        || die 'Insufficient Arguments: you must provide something to iterate over';
+		|| die 'Insufficient Arguments: you must provide something to iterate over';
+
 	my $class = ref($_class) || $_class;
 	my $_array;
 	if (scalar @array == 1) {
@@ -106,19 +107,15 @@ sub new {
 		$_array = \@array;
 	}
 	my $iterator = {
-        _current_index => 0,
-        _length => 0,
-        _iteratee => [],
-        _iterated => 0,
+		_current_index => 0,
+		_length => 0,
+		_iteratee => [],
+		_iterated => 0,
         };
 	bless($iterator, $class);
 	$iterator->_init(scalar(@{$_array}), $_array);
 	return $iterator;
 }
-
-### methods
-
-# private methods
 
 sub _init {
 	my ($self, $length, $iteratee) = @_;
@@ -129,9 +126,12 @@ sub _init {
 	$self->{_iteratee} = $iteratee;
 }
 
-# protected method
+=head2 _current_index
 
-# this can be used in a subclass to access the value
+An lvalue-ed subroutine that allows access to the iterator's internal pointer.
+This can be used in a subclass to access the value.
+
+=cut
 
 # We need to alter this so it's an lvalue
 sub _current_index : lvalue {
@@ -140,8 +140,13 @@ sub _current_index : lvalue {
     $_[0]->{_current_index}
 }
 
-# this we should never need to alter
-# so we don't make it a lvalue
+=head2 _iteratee
+
+This returns the item being iterated over, in our case an array.
+
+=cut
+
+# This we should never need to alter so we don't make it a lvalue
 sub _iteratee {
     (UNIVERSAL::isa((caller)[0], __PACKAGE__))
         || die 'Illegal Operation: This method can only be called by a subclass';
@@ -158,6 +163,14 @@ sub _getItem {
 	return $iteratee->[$index];
 }
 
+=head2 _get_item ($iteratee, $index)
+
+This method is used by all other routines to access items. Given the iteratee
+and an index, it will return the item being stored in the C<$iteratee> at the index
+of C<$index>.
+
+=cut
+
 sub _get_item { my $self = shift; $self->_getItem(@_) }
 
 # we need to alter this so it's an lvalue
@@ -167,12 +180,18 @@ sub _iterated : lvalue {
     $_[0]->{_iterated}
 }
 
+=head2 iterated
+
+Access to the _iterated status, for subclasses
+
+=cut
+
 sub iterated {
     my ($self) = @_;
     return $self->{_iterated};
 }
 
-=head2 B<has_next([$n])>
+=head2 has_next([$n])
 
 This method returns a boolean. True (1) if there are still more elements in
 the iterator, false (0) if there are not.
@@ -202,9 +221,15 @@ sub has_next {
 	return ($idx < $self->{_length}) ? 1 : 0;
 }
 
+=head2 hasNext
+
+Alternative name for has_next
+
+=cut
+
 sub hasNext { my $self = shift; $self->has_next(@_) }
 
-=head2 B<next>
+=head2 next
 
 This method returns the next item in the iterator, be sure to only call this
 once per iteration as it will advance the index pointer to the next item. If
@@ -215,13 +240,13 @@ will be thrown.
 
 sub next {
 	my ($self) = @_;
-    ($self->{_current_index} < $self->{_length})
+	    ($self->{_current_index} < $self->{_length})
         || die 'Out Of Bounds: no more elements';
         $self->{_iterated} = 1;
 	return $self->_getItem($self->{_iteratee}, $self->{_current_index}++);
 }
 
-=head2 B<get_next>
+=head2 get_next
 
 This method returns the next item in the iterator, be sure to only call this
 once per iteration as it will advance the index pointer to the next item. If
@@ -251,9 +276,15 @@ sub get_next {
     return $self->_getItem($self->{_iteratee}, $self->{_current_index}++);
 }
 
+=head2 getNext
+
+Alternative name for get_next
+
+=cut
+
 sub getNext { my $self = shift; $self->get_next(@_) }
 
-=head2 B<peek([$n])>
+=head2 peek([$n])
 
 This method can be used to peek ahead at the next item in the iterator. It
 is non-destructive, meaning it does not advance the internal pointer. If
@@ -289,7 +320,7 @@ sub peek {
     return $self->_getItem($self->{_iteratee}, $idx);
 }
 
-=head2 B<current>
+=head2 current
 
 This method can be used to get the current item in the iterator. It is non-destructive,
 meaning that it does not advance the internal pointer. This value will match the
@@ -302,7 +333,7 @@ sub current {
 	return $self->_getItem($self->{_iteratee}, $self->currentIndex());
 }
 
-=head2 B<current_index>
+=head2 current_index
 
 This method can be used to get the current index in the iterator. It is non-destructive,
 meaning that it does not advance the internal pointer. This value will match the index
@@ -315,55 +346,48 @@ sub current_index {
 	return ($self->{_current_index} != 0) ? $self->{_current_index} - 1 : 0;
 }
 
+=head2 currentIndex
+
+Alternative name for current_index
+
+=cut
+
 sub currentIndex { my $self = shift; $self->current_index(@_) }
+
+=head2 reset
+
+Reset index to allow iteration from the start
+
+=cut
+
+sub reset
+{  
+	my $self = shift;
+	$self->{'_current_index'} = 0;
+}
+
+=head2 get_length
+
+This is a basic accessor for getting the length of the array being iterated over.
+
+=cut
 
 sub get_length {
     my ($self) = @_;
     return $self->{_length};
 }
 
+=head2 getLength
+
+Alternative name for get_length
+
+=cut
+
 sub getLength { my $self = shift; $self->get_length(@_) }
 
 1;
 
-=for Pod::Coverage .+
-
-=head1 METHODS
-
-=head2 Public Methods
-
-=item B<get_length>
-
-This is a basic accessor for getting the length of the array being iterated over.
-
-=back
-
-=head2 Protected Methods
-
-These methods are I<protected>, in the Java/C++ sense of the word. They can only be
-called internally by subclasses of Array::Iterator, an exception is thrown if that
-condition is violated. They are documented here only for people interested in
-subclassing Array::Iterator.
-
-=over 4
-
-=item B<_current_index>
-
-An lvalue-ed subroutine that allows access to the iterator's internal pointer.
-
-=item B<_iteratee>
-
-This returns the item being iterated over, in our case an array.
-
-=item B<_get_item ($iteratee, $index)>
-
-This method is used by all other routines to access items. Given the iteratee
-and an index, it will return the item being stored in the C<$iteratee> at the index
-of C<$index>.
-
-=back
-
-=head1 TO DO
+=head1 TODO
 
 =over 4
 
@@ -386,15 +410,15 @@ to Array::Iterator, they are:
 
 =over 4
 
-=item B<Array::Iterator::BiDirectional>
+=item C<Array::Iterator::BiDirectional>
 
 Adds the ability to move backward and forward through the array.
 
-=item B<Array::Iterator::Circular>
+=item C<Array::Iterator::Circular>
 
 When this iterator reaches the end of its list, it will loop back to the start again.
 
-=item B<Array::Iterator::Reusable>
+=item C<Array::Iterator::Reusable>
 
 This iterator can be reset to its beginning and used again.
 
@@ -415,7 +439,7 @@ you don't happen to like the way I do it.
 
 =over 4
 
-=item B<Tie::Array::Iterable>
+=item Tie::Array::Iterable
 
 This module ties the array, something we do not do. But it also makes an attempt to
 account for, and allow the array to be changed during iteration. It accomplishes this
@@ -427,7 +451,7 @@ In fact,
 it is recommended to not alter your array with Array::Iterator,
 and if possible we will enforce this in later versions.
 
-=item B<Data::Iter>
+=item Data::Iter
 
 This module allows for simple iteration over both hashes and arrays.
 It does it by
@@ -435,7 +459,7 @@ importing several functions that can be used to loop over either type (hash or a
 in the same way. It is an interesting module, it differs from Array::Iterator in
 paradigm (Array::Iterator is more OO) and intent.
 
-=item B<Class::Iterator>
+=item Class::Iterator
 
 This is essentially a wrapper around a closure-based iterator.
 This method can be very
@@ -444,7 +468,7 @@ closures. I actually was a closure-as-iterator fan for a while but eventually mo
 away from it in favor of the more plain vanilla means of iteration, like that found
 Array::Iterator.
 
-=item B<Class::Iter>
+=item Class::Iter
 
 This is part of the Class::Visitor module and is a Visitor and Iterator extension to
 Class::Template.

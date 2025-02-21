@@ -57,7 +57,7 @@ no attempt is made to enforce this (although I will if I can find an efficient
 means of doing so). This class only intends to provide a clear and simple
 means of generic iteration, nothing more (yet).
 
-## **new (@array | $array\_ref | $hash\_ref)**
+## new (@array | $array\_ref | $hash\_ref)
 
 The constructor can be passed either a plain Perl array, an array reference,
 or a hash reference (with the array specified as a single key of the hash,
@@ -72,7 +72,26 @@ of a HASH reference, with the key, \_\_array\_\_:
 
     my $i = Array::Iterator->new({ __array__ => \@array });
 
-## **has\_next(\[$n\])**
+## \_current\_index
+
+An lvalue-ed subroutine that allows access to the iterator's internal pointer.
+This can be used in a subclass to access the value.
+
+## \_iteratee
+
+This returns the item being iterated over, in our case an array.
+
+## \_get\_item ($iteratee, $index)
+
+This method is used by all other routines to access items. Given the iteratee
+and an index, it will return the item being stored in the `$iteratee` at the index
+of `$index`.
+
+## iterated
+
+Access to the \_iterated status, for subclasses
+
+## has\_next(\[$n\])
 
 This method returns a boolean. True (1) if there are still more elements in
 the iterator, false (0) if there are not.
@@ -88,14 +107,18 @@ Note that `has_next(1)` is the same as `has_next()`.
 
 Throws an exception if `$n` <= 0.
 
-## **next**
+## hasNext
+
+Alternative name for has\_next
+
+## next
 
 This method returns the next item in the iterator, be sure to only call this
 once per iteration as it will advance the index pointer to the next item. If
 this method is called after all elements have been exhausted, an exception
 will be thrown.
 
-## **get\_next**
+## get\_next
 
 This method returns the next item in the iterator, be sure to only call this
 once per iteration as it will advance the index pointer to the next item. If
@@ -116,7 +139,11 @@ undefined or false values in the iterator. Of course, if this fits your
 data, then there is no problem. Otherwise I would recommend the `has_next`/`next`
 idiom instead.
 
-## **peek(\[$n\])**
+## getNext
+
+Alternative name for get\_next
+
+## peek(\[$n\])
 
 This method can be used to peek ahead at the next item in the iterator. It
 is non-destructive, meaning it does not advance the internal pointer. If
@@ -137,48 +164,35 @@ out of bounds. I decided this was not a good practice, as it made it difficult
 to be able to peek ahead effectively. This is not the case when calling with an argument
 that is <= 0 though, as it's clearly a sign of incorrect usage.
 
-## **current**
+## current
 
 This method can be used to get the current item in the iterator. It is non-destructive,
 meaning that it does not advance the internal pointer. This value will match the
 last value dispensed by `next` or `get_next`.
 
-## **current\_index**
+## current\_index
 
 This method can be used to get the current index in the iterator. It is non-destructive,
 meaning that it does not advance the internal pointer. This value will match the index
 of the last value dispensed by `next` or `get_next`.
 
-# METHODS
+## currentIndex
 
-## Public Methods
+Alternative name for current\_index
 
-- **get\_length**
+## reset
 
-    This is a basic accessor for getting the length of the array being iterated over.
+Reset index to allow iteration from the start
 
-## Protected Methods
+## get\_length
 
-These methods are _protected_, in the Java/C++ sense of the word. They can only be
-called internally by subclasses of Array::Iterator, an exception is thrown if that
-condition is violated. They are documented here only for people interested in
-subclassing Array::Iterator.
+This is a basic accessor for getting the length of the array being iterated over.
 
-- **\_current\_index**
+## getLength
 
-    An lvalue-ed subroutine that allows access to the iterator's internal pointer.
+Alternative name for get\_length
 
-- **\_iteratee**
-
-    This returns the item being iterated over, in our case an array.
-
-- **\_get\_item ($iteratee, $index)**
-
-    This method is used by all other routines to access items. Given the iteratee
-    and an index, it will return the item being stored in the `$iteratee` at the index
-    of `$index`.
-
-# TO DO
+# TODO
 
 - Improve BiDirectional Test suite
 
@@ -195,15 +209,15 @@ subclassing Array::Iterator.
 This module now includes several subclasses of Array::Iterator which add certain behaviors
 to Array::Iterator, they are:
 
-- **Array::Iterator::BiDirectional**
+- `Array::Iterator::BiDirectional`
 
     Adds the ability to move backward and forward through the array.
 
-- **Array::Iterator::Circular**
+- `Array::Iterator::Circular`
 
     When this iterator reaches the end of its list, it will loop back to the start again.
 
-- **Array::Iterator::Reusable**
+- `Array::Iterator::Reusable`
 
     This iterator can be reset to its beginning and used again.
 
@@ -220,7 +234,7 @@ parent module's context. There are, however, some other modules out there that a
 for pure iteration. I have provided a list below of the ones I have found if perhaps
 you don't happen to like the way I do it.
 
-- **Tie::Array::Iterable**
+- Tie::Array::Iterable
 
     This module ties the array, something we do not do. But it also makes an attempt to
     account for, and allow the array to be changed during iteration. It accomplishes this
@@ -232,7 +246,7 @@ you don't happen to like the way I do it.
     it is recommended to not alter your array with Array::Iterator,
     and if possible we will enforce this in later versions.
 
-- **Data::Iter**
+- Data::Iter
 
     This module allows for simple iteration over both hashes and arrays.
     It does it by
@@ -240,7 +254,7 @@ you don't happen to like the way I do it.
     in the same way. It is an interesting module, it differs from Array::Iterator in
     paradigm (Array::Iterator is more OO) and intent.
 
-- **Class::Iterator**
+- Class::Iterator
 
     This is essentially a wrapper around a closure-based iterator.
     This method can be very
@@ -249,7 +263,7 @@ you don't happen to like the way I do it.
     away from it in favor of the more plain vanilla means of iteration, like that found
     Array::Iterator.
 
-- **Class::Iter**
+- Class::Iter
 
     This is part of the Class::Visitor module and is a Visitor and Iterator extension to
     Class::Template.
@@ -322,7 +336,3 @@ Hey! **The above document had some coding errors, which are explained below:**
 - Around line 24:
 
     Non-ASCII character seen before =encoding in 'Java’s'. Assuming UTF-8
-
-- Around line 335:
-
-    '=item' outside of any '=over'
