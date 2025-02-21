@@ -15,34 +15,34 @@ BEGIN {
 # test that the constructor cannot be empty
 throws_ok {
     my $i = Array::Iterator->new();
-} qr/^Insufficient Arguments \: you must provide something to iterate over/,
+} qr/^Insufficient Arguments\: you must provide something to iterate over/,
   '... we got the error we expected';
 
 # check that it does not allow non-array ref paramaters
 throws_ok {
     my $i = Array::Iterator->new({});
-} qr/^Incorrect type \: HASH reference must contain the key __array__/,
+} qr/^Incorrect type\: HASH reference must contain the key __array__/,
   '... we got the error we expected';
 
 # verify the HASH ref sanity checks
 throws_ok {
     my $i = Array::Iterator->new({ no_array_key => [] });
-} qr/^Incorrect type \: HASH reference must contain the key __array__/,
+} qr/^Incorrect type\: HASH reference must contain the key __array__/,
   '... we got the error we expected';
 
 throws_ok {
     my $i = Array::Iterator->new({ __array__ => "not an array ref" });
-} qr/^Incorrect type \: __array__ value must be an ARRAY reference/,
+} qr/^Incorrect type\: __array__ value must be an ARRAY reference/,
   '... we got the error we expected';
 
 throws_ok {
 		Array::Iterator->_init(undef, 1);
-} qr/^Insufficient Arguments \: you must provide an length and an iteratee/,
+} qr/^Insufficient Arguments\: you must provide an length and an iteratee/,
   '... we got the error we expected';
 
 throws_ok {
 		Array::Iterator->_init(1);
-} qr/^Insufficient Arguments \: you must provide an length and an iteratee/,
+} qr/^Insufficient Arguments\: you must provide an length and an iteratee/,
   '... we got the error we expected';
 
 # now test the next & peek exceptions
@@ -60,7 +60,7 @@ ok(eq_array(\@control, \@_control), '.. make sure all are exhausted');
 # test that next will croak if it is called passed the end
 throws_ok {
     $iterator->next();
-} qr/^Out Of Bounds \: no more elements/,
+} qr/^Out Of Bounds\: no more elements/,
   '... we got the error we expected';
 
 # test arbitrary lookups edge cases
@@ -102,6 +102,6 @@ throws_ok {
 # test that peek will croak if it is called passed the end
 # throws_ok {
 #     $iterator->peek();
-# } qr/^Out Of Bounds \: cannot peek past the end of the array/,
+# } qr/^Out Of Bounds\: cannot peek past the end of the array/,
 #   '... we got the error we expected';
 # -----------------------------------------------

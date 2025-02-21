@@ -87,17 +87,17 @@ sub new {
 	my ($_class, @array) = @_;
 
 	(@array)
-        || die "Insufficient Arguments : you must provide something to iterate over";
+        || die 'Insufficient Arguments: you must provide something to iterate over';
 	my $class = ref($_class) || $_class;
 	my $_array;
 	if (scalar @array == 1) {
-		if (ref $array[0] eq "ARRAY") {
+		if (ref $array[0] eq 'ARRAY') {
 		    $_array = $array[0];
 		}
-		elsif (ref $array[0] eq "HASH") {
-		    die "Incorrect type : HASH reference must contain the key __array__"
+		elsif (ref $array[0] eq 'HASH') {
+		    die 'Incorrect type: HASH reference must contain the key __array__'
 		        unless exists $array[0]->{__array__};
-		    die "Incorrect type : __array__ value must be an ARRAY reference"
+		    die 'Incorrect type: __array__ value must be an ARRAY reference'
 		        unless ref $array[0]->{__array__} eq 'ARRAY';
 		    $_array = $array[0]->{__array__};
 		}
@@ -123,7 +123,7 @@ sub new {
 sub _init {
 	my ($self, $length, $iteratee) = @_;
 	(defined($length) && defined($iteratee))
-        || die "Insufficient Arguments : you must provide an length and an iteratee";
+        || die 'Insufficient Arguments: you must provide an length and an iteratee';
 	$self->{_current_index} = 0;
 	$self->{_length} = $length;
 	$self->{_iteratee} = $iteratee;
@@ -136,7 +136,7 @@ sub _init {
 # We need to alter this so it's an lvalue
 sub _current_index : lvalue {
     (UNIVERSAL::isa((caller)[0], __PACKAGE__))
-        || die "Illegal Operation : This method can only be called by a subclass";
+        || die 'Illegal Operation: This method can only be called by a subclass';
     $_[0]->{_current_index}
 }
 
@@ -144,7 +144,7 @@ sub _current_index : lvalue {
 # so we don't make it a lvalue
 sub _iteratee {
     (UNIVERSAL::isa((caller)[0], __PACKAGE__))
-        || die "Illegal Operation : This method can only be called by a subclass";
+        || die 'Illegal Operation: This method can only be called by a subclass';
     $_[0]->{_iteratee}
 }
 
@@ -153,29 +153,42 @@ sub _iteratee {
 # as well
 sub _getItem {
     (UNIVERSAL::isa((caller)[0], __PACKAGE__))
-        || die "Illegal Operation : This method can only be called by a subclass";
+        || die 'Illegal Operation: This method can only be called by a subclass';
 	my ($self, $iteratee, $index) = @_;
 	return $iteratee->[$index];
 }
 
 sub _get_item { my $self = shift; $self->_getItem(@_) }
 
-# we need to alter this so its an lvalue
+# we need to alter this so it's an lvalue
 sub _iterated : lvalue {
     (UNIVERSAL::isa((caller)[0], __PACKAGE__))
-        || die "Illegal Operation : This method can only be called by a subclass";
+        || die 'Illegal Operation: This method can only be called by a subclass';
     $_[0]->{_iterated}
 }
-
-# public methods
-
-# this defines the interface
-# an iterator object will have
 
 sub iterated {
     my ($self) = @_;
     return $self->{_iterated};
 }
+
+=head2 B<has_next([$n])>
+
+This method returns a boolean. True (1) if there are still more elements in
+the iterator, false (0) if there are not.
+
+Takes an optional positive integer (E<gt> 0) that specifies the position you
+want to check. This allows you to check if there an element at an arbitrary position.
+Think of it as an ordinal number you want to check:
+
+  $i->has_next(2);  # 2nd next element
+  $i->has_next(10); # 10th next element
+
+Note that C<has_next(1)> is the same as C<has_next()>.
+
+Throws an exception if C<$n> E<lt>= 0.
+
+=cut
 
 sub has_next {
 	my ($self, $n) = @_;
@@ -194,7 +207,7 @@ sub hasNext { my $self = shift; $self->has_next(@_) }
 sub next {
 	my ($self) = @_;
     ($self->{_current_index} < $self->{_length})
-        || die "Out Of Bounds : no more elements";
+        || die 'Out Of Bounds: no more elements';
         $self->{_iterated} = 1;
 	return $self->_getItem($self->{_iteratee}, $self->{_current_index}++);
 }
@@ -249,22 +262,6 @@ sub getLength { my $self = shift; $self->get_length(@_) }
 =head2 Public Methods
 
 =over 4
-
-=item B<has_next([$n])>
-
-This method returns a boolean. True (1) if there are still more elements in
-the iterator, false (0) if there are not.
-
-Takes an optional positive integer (E<gt> 0) that specifies the position you
-want to check. This allows you to check if there an element at an arbitrary position.
-Think of it as an ordinal number you want to check:
-
-  $i->has_next(2);  # 2nd next element
-  $i->has_next(10); # 10th next element
-
-Note that C<has_next(1)> is the same as C<has_next()>.
-
-Throws an exception if C<$n> E<lt>= 0.
 
 =item B<next>
 

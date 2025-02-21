@@ -72,25 +72,25 @@ of a HASH reference, with the key, \_\_array\_\_:
 
     my $i = Array::Iterator->new({ __array__ => \@array });
 
+## **has\_next(\[$n\])**
+
+This method returns a boolean. True (1) if there are still more elements in
+the iterator, false (0) if there are not.
+
+Takes an optional positive integer (> 0) that specifies the position you
+want to check. This allows you to check if there an element at an arbitrary position.
+Think of it as an ordinal number you want to check:
+
+    $i->has_next(2);  # 2nd next element
+    $i->has_next(10); # 10th next element
+
+Note that `has_next(1)` is the same as `has_next()`.
+
+Throws an exception if `$n` <= 0.
+
 # METHODS
 
 ## Public Methods
-
-- **has\_next(\[$n\])**
-
-    This method returns a boolean. True (1) if there are still more elements in
-    the iterator, false (0) if there are not.
-
-    Takes an optional positive integer (> 0) that specifies the position you
-    want to check. This allows you to check if there an element at an arbitrary position.
-    Think of it as an ordinal number you want to check:
-
-        $i->has_next(2);  # 2nd next element
-        $i->has_next(10); # 10th next element
-
-    Note that `has_next(1)` is the same as `has_next()`.
-
-    Throws an exception if `$n` <= 0.
 
 - **next**
 
