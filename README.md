@@ -8,6 +8,13 @@ Version 0.133
 
 # SYNOPSIS
 
+`Array::Iterator` is a Perl module that provides a simple,
+uni-directional iterator interface for traversing arrays.
+It allows users to iterate over arrays, array references, or hash references containing an array, offering methods like next, has\_next, peek, and current to facilitate controlled access to elements.
+The iterator maintains an internal pointer, ensuring elements are accessed sequentially without modifying the underlying array.
+Tt offers a clean, object-oriented approach to iteration, inspired by Java’s Iterator interface.
+The module is extendable, allowing subclassing for custom behaviour.
+
     use Array::Iterator;
 
     # create an iterator with an array
@@ -45,11 +52,7 @@ Version 0.133
       # ... do something with $current
     }
 
-# DESCRIPTION
-
-This class provides a very simple iterator interface. It is uni-directional
-and can only be used once. It provides no means of reversing or resetting the
-iterator. It is not recommended to alter the array during iteration, however
+It is not recommended to alter the array during iteration, however
 no attempt is made to enforce this (although I will if I can find an efficient
 means of doing so). This class only intends to provide a clear and simple
 means of generic iteration, nothing more (yet).
@@ -60,11 +63,12 @@ means of generic iteration, nothing more (yet).
 
 - **new (@array | $array\_ref | $hash\_ref)**
 
-    The constructor can be passed either a plain perl array, an array reference,
-    or a hash reference (with the array specified as a single key off the hash,
-    \_\_array\_\_). Single element arrays are not supported by either of the first
+    The constructor can be passed either a plain Perl array, an array reference,
+    or a hash reference (with the array specified as a single key of the hash,
+    \_\_array\_\_).
+    Single-element arrays are not supported by either of the first
     two calling conventions, since it is not possible to distinguish between an
-    array of a single element which happens to be an array reference, and an
+    array of a single-element which happens to be an array reference and an
     array reference of a single element, thus previous versions of the constructor
     would raise an exception. If you expect to pass arrays to the constructor which
     may have only a single element, then the array can be passed as the element
@@ -74,11 +78,11 @@ means of generic iteration, nothing more (yet).
 
 - **has\_next(\[$n\])**
 
-    This methods returns a boolean. True (1) if there are still more elements in
+    This method returns a boolean. True (1) if there are still more elements in
     the iterator, false (0) if there are not.
 
     Takes an optional positive integer (> 0) that specifies the position you
-    want to check. This allows you to check if there an element at arbitrary position.
+    want to check. This allows you to check if there an element at an arbitrary position.
     Think of it as an ordinal number you want to check:
 
         $i->has_next(2);  # 2nd next element
@@ -102,14 +106,15 @@ means of generic iteration, nothing more (yet).
     this method is called after all elements have been exhausted, it will return
     undef.
 
-    This method was added to allow for a fairly common perl iterator idiom of:
+    This method was added to allow for a fairly common Perl iterator idiom of:
 
         my $current;
         while ($current = $i->get_next()) {
             ...
         }
 
-    In this the loop terminates once `$current` is assigned to a false value.
+    In this,
+    the loop terminates once `$current` is assigned to a false value.
     The only problem with this idiom for me is that it does not allow for
     undefined or false values in the iterator. Of course, if this fits your
     data, then there is no problem. Otherwise I would recommend the `has_next`/`next`
@@ -118,7 +123,7 @@ means of generic iteration, nothing more (yet).
 - **peek(\[$n\])**
 
     This method can be used to peek ahead at the next item in the iterator. It
-    is non-destructuve, meaning it does not advance the internal pointer. If
+    is non-destructive, meaning it does not advance the internal pointer. If
     this method is called and attempts to reach beyond the bounds of the iterator,
     it will return undef.
 
@@ -131,9 +136,9 @@ means of generic iteration, nothing more (yet).
 
     Throws an exception if `$n` <= 0.
 
-    **NOTE:** Prior to version 0.03 this method would throw an exception if called
+    **NOTE:** Before version 0.03 this method would throw an exception if called
     out of bounds. I decided this was not a good practice, as it made it difficult
-    to be able to peek ahead effectively. This not the case when calling with an argument
+    to be able to peek ahead effectively. This is not the case when calling with an argument
     that is <= 0 though, as it's clearly a sign of incorrect usage.
 
 - **current**
@@ -161,15 +166,15 @@ subclassing Array::Iterator.
 
 - **\_current\_index**
 
-    An lvalue-ed subroutine which allows access to the iterator's internal pointer.
+    An lvalue-ed subroutine that allows access to the iterator's internal pointer.
 
 - **\_iteratee**
 
-    This returns the item being iteratated over, in our case an array.
+    This returns the item being iterated over, in our case an array.
 
 - **\_get\_item ($iteratee, $index)**
 
-    This method is used by all other routines to access items with. Given the iteratee
+    This method is used by all other routines to access items. Given the iteratee
     and an index, it will return the item being stored in the `$iteratee` at the index
     of `$index`.
 
@@ -177,8 +182,7 @@ subclassing Array::Iterator.
 
 - Improve BiDirectional Test suite
 
-    I want to test the back and forth a little more, make sure they work well with
-    one another.
+    I want to test the back-and-forth a little more and make sure they work well with one another.
 
 - Other Iterators
 
@@ -193,7 +197,7 @@ to Array::Iterator, they are:
 
 - **Array::Iterator::BiDirectional**
 
-    Adds the ability to move backwards and forwards through the array.
+    Adds the ability to move backward and forward through the array.
 
 - **Array::Iterator::Circular**
 
@@ -205,14 +209,15 @@ to Array::Iterator, they are:
 
 The Design Patterns book by the Gang of Four, specifically the Iterator pattern.
 
-Some of the interface for this class is based upon the Java Iterator interface.
+Some of the interface for this class is based on the Java Iterator interface.
 
 # OTHER ITERATOR MODULES
 
-There are a number of modules on CPAN with the word Iterator in them. Most of them are
+There are several on CPAN with the word Iterator in them.
+Most of them are
 actually iterators included inside other modules, and only really useful within that
-parent modules context. There are however some other modules out there that are just
-for pure iteration. I have provided a list below of the ones I have found, if perhaps
+parent module's context. There are, however, some other modules out there that are just
+for pure iteration. I have provided a list below of the ones I have found if perhaps
 you don't happen to like the way I do it.
 
 - **Tie::Array::Iterable**
@@ -222,34 +227,41 @@ you don't happen to like the way I do it.
     control because the underlying array is tied. As we all know, tie-ing things can be a
     performance issue, but if you need what this module provides, then it will likely be
     an acceptable compromise. Array::Iterator makes no attempt to deal with this mid-iteration
-    manipulation problem. In fact it is recommended to not alter your array with Array::Iterator,
+    manipulation problem.
+    In fact,
+    it is recommended to not alter your array with Array::Iterator,
     and if possible we will enforce this in later versions.
 
 - **Data::Iter**
 
-    This module allows for simple iteration over both hashes and arrays. It does it by
-    importing several functions which can be used to loop over either type (hash or array)
+    This module allows for simple iteration over both hashes and arrays.
+    It does it by
+    importing several functions that can be used to loop over either type (hash or array)
     in the same way. It is an interesting module, it differs from Array::Iterator in
-    paradigm (Array::Iterator is more OO) as well as in intent.
+    paradigm (Array::Iterator is more OO) and intent.
 
 - **Class::Iterator**
 
-    This is essentially a wrapper around a closure based iterator. This method can be very
+    This is essentially a wrapper around a closure-based iterator.
+    This method can be very
     flexible, but at times is difficult to manage due to the inherent complexity of using
-    closures. I actually was a closure-as-iterator fan for a while, but eventually moved
+    closures. I actually was a closure-as-iterator fan for a while but eventually moved
     away from it in favor of the more plain vanilla means of iteration, like that found
     Array::Iterator.
 
 - **Class::Iter**
 
-    This is part of the Class::Visitor module, and is a Visitor and Iterator extensions to
-    Class::Template. Array::Iterator is a standalone module not associated with others.
+    This is part of the Class::Visitor module and is a Visitor and Iterator extension to
+    Class::Template.
+    Array::Iterator is a standalone module that is not associated with others.
 
 - **Data::Iterator::EasyObj**
 
-    Data::Iterator::EasyObj makes your array of arrays into iterator objects. It also has
-    the ability to further nest additional data structures including Data::Iterator::EasyObj
-    objects. Array::Iterator is one dimensional only, and does not attempt to do many of
+    Data::Iterator::EasyObj makes your array of arrays into iterator objects.
+    It also can
+    further nest additional data structures including Data::Iterator::EasyObj
+    objects.
+    Array::Iterator is one-dimensional only and does not attempt to do many of
     the more advanced features of this module.
 
 # ACKNOWLEDGEMENTS
@@ -302,3 +314,11 @@ You can also look for information at:
 - CPAN Testers Dependencies
 
     [http://deps.cpantesters.org/?module=Array::Iterator](http://deps.cpantesters.org/?module=Array::Iterator)
+
+# POD ERRORS
+
+Hey! **The above document had some coding errors, which are explained below:**
+
+- Around line 24:
+
+    Non-ASCII character seen before =encoding in 'Java’s'. Assuming UTF-8
