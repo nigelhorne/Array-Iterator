@@ -289,6 +289,14 @@ sub peek {
     return $self->_getItem($self->{_iteratee}, $idx);
 }
 
+=head2 B<current>
+
+This method can be used to get the current item in the iterator. It is non-destructive,
+meaning that it does not advance the internal pointer. This value will match the
+last value dispensed by C<next> or C<get_next>.
+
+=cut
+
 sub current {
 	my ($self) = @_;
 	return $self->_getItem($self->{_iteratee}, $self->currentIndex());
@@ -315,12 +323,6 @@ sub getLength { my $self = shift; $self->get_length(@_) }
 =head1 METHODS
 
 =head2 Public Methods
-
-=item B<current>
-
-This method can be used to get the current item in the iterator. It is non-destructive,
-meaning that it does not advance the internal pointer. This value will match the
-last value dispensed by C<next> or C<get_next>.
 
 =item B<current_index>
 

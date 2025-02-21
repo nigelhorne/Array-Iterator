@@ -137,15 +137,15 @@ out of bounds. I decided this was not a good practice, as it made it difficult
 to be able to peek ahead effectively. This is not the case when calling with an argument
 that is <= 0 though, as it's clearly a sign of incorrect usage.
 
+## **current**
+
+This method can be used to get the current item in the iterator. It is non-destructive,
+meaning that it does not advance the internal pointer. This value will match the
+last value dispensed by `next` or `get_next`.
+
 # METHODS
 
 ## Public Methods
-
-- **current**
-
-    This method can be used to get the current item in the iterator. It is non-destructive,
-    meaning that it does not advance the internal pointer. This value will match the
-    last value dispensed by `next` or `get_next`.
 
 - **current\_index**
 
@@ -323,6 +323,6 @@ Hey! **The above document had some coding errors, which are explained below:**
 
     Non-ASCII character seen before =encoding in 'Java’s'. Assuming UTF-8
 
-- Around line 319:
+- Around line 327:
 
     '=item' outside of any '=over'

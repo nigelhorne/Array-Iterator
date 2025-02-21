@@ -9,7 +9,14 @@ use Array::Iterator;
 # AUTHORITY
 # DATE
 # DIST
-# VERSION
+
+=head1 VERSION
+
+Version 0.133
+
+=cut
+
+our $VERSION = '0.133';
 
 our @ISA = qw(Array::Iterator);
 
