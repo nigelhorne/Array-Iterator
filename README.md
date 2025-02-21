@@ -88,16 +88,16 @@ Note that `has_next(1)` is the same as `has_next()`.
 
 Throws an exception if `$n` <= 0.
 
+## **next**
+
+This method returns the next item in the iterator, be sure to only call this
+once per iteration as it will advance the index pointer to the next item. If
+this method is called after all elements have been exhausted, an exception
+will be thrown.
+
 # METHODS
 
 ## Public Methods
-
-- **next**
-
-    This method returns the next item in the iterator, be sure to only call this
-    once per iteration as it will advance the index pointer to the next item. If
-    this method is called after all elements have been exhausted, an exception
-    will be thrown.
 
 - **get\_next**
 
@@ -322,3 +322,7 @@ Hey! **The above document had some coding errors, which are explained below:**
 - Around line 24:
 
     Non-ASCII character seen before =encoding in 'Java’s'. Assuming UTF-8
+
+- Around line 273:
+
+    '=item' outside of any '=over'

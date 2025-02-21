@@ -204,6 +204,15 @@ sub has_next {
 
 sub hasNext { my $self = shift; $self->has_next(@_) }
 
+=head2 B<next>
+
+This method returns the next item in the iterator, be sure to only call this
+once per iteration as it will advance the index pointer to the next item. If
+this method is called after all elements have been exhausted, an exception
+will be thrown.
+
+=cut
+
 sub next {
 	my ($self) = @_;
     ($self->{_current_index} < $self->{_length})
@@ -211,6 +220,29 @@ sub next {
         $self->{_iterated} = 1;
 	return $self->_getItem($self->{_iteratee}, $self->{_current_index}++);
 }
+
+=head2 B<get_next>
+
+This method returns the next item in the iterator, be sure to only call this
+once per iteration as it will advance the index pointer to the next item. If
+this method is called after all elements have been exhausted, it will return
+undef.
+
+This method was added to allow for a fairly common Perl iterator idiom of:
+
+  my $current;
+  while ($current = $i->get_next()) {
+      ...
+  }
+
+In this,
+the loop terminates once C<$current> is assigned to a false value.
+The only problem with this idiom for me is that it does not allow for
+undefined or false values in the iterator. Of course, if this fits your
+data, then there is no problem. Otherwise I would recommend the C<has_next>/C<next>
+idiom instead.
+
+=cut
 
 sub get_next {
     my ($self) = @_;
@@ -260,36 +292,6 @@ sub getLength { my $self = shift; $self->get_length(@_) }
 =head1 METHODS
 
 =head2 Public Methods
-
-=over 4
-
-=item B<next>
-
-This method returns the next item in the iterator, be sure to only call this
-once per iteration as it will advance the index pointer to the next item. If
-this method is called after all elements have been exhausted, an exception
-will be thrown.
-
-=item B<get_next>
-
-This method returns the next item in the iterator, be sure to only call this
-once per iteration as it will advance the index pointer to the next item. If
-this method is called after all elements have been exhausted, it will return
-undef.
-
-This method was added to allow for a fairly common Perl iterator idiom of:
-
-  my $current;
-  while ($current = $i->get_next()) {
-      ...
-  }
-
-In this,
-the loop terminates once C<$current> is assigned to a false value.
-The only problem with this idiom for me is that it does not allow for
-undefined or false values in the iterator. Of course, if this fits your
-data, then there is no problem. Otherwise I would recommend the C<has_next>/C<next>
-idiom instead.
 
 =item B<peek([$n])>
 
