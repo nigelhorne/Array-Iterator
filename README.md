@@ -95,51 +95,51 @@ once per iteration as it will advance the index pointer to the next item. If
 this method is called after all elements have been exhausted, an exception
 will be thrown.
 
+## **get\_next**
+
+This method returns the next item in the iterator, be sure to only call this
+once per iteration as it will advance the index pointer to the next item. If
+this method is called after all elements have been exhausted, it will return
+undef.
+
+This method was added to allow for a fairly common Perl iterator idiom of:
+
+    my $current;
+    while ($current = $i->get_next()) {
+        ...
+    }
+
+In this,
+the loop terminates once `$current` is assigned to a false value.
+The only problem with this idiom for me is that it does not allow for
+undefined or false values in the iterator. Of course, if this fits your
+data, then there is no problem. Otherwise I would recommend the `has_next`/`next`
+idiom instead.
+
+## **peek(\[$n\])**
+
+This method can be used to peek ahead at the next item in the iterator. It
+is non-destructive, meaning it does not advance the internal pointer. If
+this method is called and attempts to reach beyond the bounds of the iterator,
+it will return undef.
+
+Takes an optional positive integer (> 0) that specifies how far ahead you want to peek:
+
+    $i->peek(2);  # gives you 2nd next element
+    $i->peek(10); # gives you 10th next element
+
+Note that `peek(1)` is the same as `peek()`.
+
+Throws an exception if `$n` <= 0.
+
+**NOTE:** Before version 0.03 this method would throw an exception if called
+out of bounds. I decided this was not a good practice, as it made it difficult
+to be able to peek ahead effectively. This is not the case when calling with an argument
+that is <= 0 though, as it's clearly a sign of incorrect usage.
+
 # METHODS
 
 ## Public Methods
-
-- **get\_next**
-
-    This method returns the next item in the iterator, be sure to only call this
-    once per iteration as it will advance the index pointer to the next item. If
-    this method is called after all elements have been exhausted, it will return
-    undef.
-
-    This method was added to allow for a fairly common Perl iterator idiom of:
-
-        my $current;
-        while ($current = $i->get_next()) {
-            ...
-        }
-
-    In this,
-    the loop terminates once `$current` is assigned to a false value.
-    The only problem with this idiom for me is that it does not allow for
-    undefined or false values in the iterator. Of course, if this fits your
-    data, then there is no problem. Otherwise I would recommend the `has_next`/`next`
-    idiom instead.
-
-- **peek(\[$n\])**
-
-    This method can be used to peek ahead at the next item in the iterator. It
-    is non-destructive, meaning it does not advance the internal pointer. If
-    this method is called and attempts to reach beyond the bounds of the iterator,
-    it will return undef.
-
-    Takes an optional positive integer (> 0) that specifies how far ahead you want to peek:
-
-        $i->peek(2);  # gives you 2nd next element
-        $i->peek(10); # gives you 10th next element
-
-    Note that `peek(1)` is the same as `peek()`.
-
-    Throws an exception if `$n` <= 0.
-
-    **NOTE:** Before version 0.03 this method would throw an exception if called
-    out of bounds. I decided this was not a good practice, as it made it difficult
-    to be able to peek ahead effectively. This is not the case when calling with an argument
-    that is <= 0 though, as it's clearly a sign of incorrect usage.
 
 - **current**
 
@@ -323,6 +323,6 @@ Hey! **The above document had some coding errors, which are explained below:**
 
     Non-ASCII character seen before =encoding in 'Java’s'. Assuming UTF-8
 
-- Around line 273:
+- Around line 319:
 
     '=item' outside of any '=over'

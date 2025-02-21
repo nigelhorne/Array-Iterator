@@ -253,6 +253,29 @@ sub get_next {
 
 sub getNext { my $self = shift; $self->get_next(@_) }
 
+=head2 B<peek([$n])>
+
+This method can be used to peek ahead at the next item in the iterator. It
+is non-destructive, meaning it does not advance the internal pointer. If
+this method is called and attempts to reach beyond the bounds of the iterator,
+it will return undef.
+
+Takes an optional positive integer (E<gt> 0) that specifies how far ahead you want to peek:
+
+  $i->peek(2);  # gives you 2nd next element
+  $i->peek(10); # gives you 10th next element
+
+Note that C<peek(1)> is the same as C<peek()>.
+
+Throws an exception if C<$n> E<lt>= 0.
+
+B<NOTE:> Before version 0.03 this method would throw an exception if called
+out of bounds. I decided this was not a good practice, as it made it difficult
+to be able to peek ahead effectively. This is not the case when calling with an argument
+that is E<lt>= 0 though, as it's clearly a sign of incorrect usage.
+
+=cut
+
 sub peek {
     my ($self, $n) = @_;
 
@@ -292,27 +315,6 @@ sub getLength { my $self = shift; $self->get_length(@_) }
 =head1 METHODS
 
 =head2 Public Methods
-
-=item B<peek([$n])>
-
-This method can be used to peek ahead at the next item in the iterator. It
-is non-destructive, meaning it does not advance the internal pointer. If
-this method is called and attempts to reach beyond the bounds of the iterator,
-it will return undef.
-
-Takes an optional positive integer (E<gt> 0) that specifies how far ahead you want to peek:
-
-  $i->peek(2);  # gives you 2nd next element
-  $i->peek(10); # gives you 10th next element
-
-Note that C<peek(1)> is the same as C<peek()>.
-
-Throws an exception if C<$n> E<lt>= 0.
-
-B<NOTE:> Before version 0.03 this method would throw an exception if called
-out of bounds. I decided this was not a good practice, as it made it difficult
-to be able to peek ahead effectively. This is not the case when calling with an argument
-that is E<lt>= 0 though, as it's clearly a sign of incorrect usage.
 
 =item B<current>
 

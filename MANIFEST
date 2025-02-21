@@ -8,8 +8,11 @@ Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
 README.md
+t/00-load.t
 t/bidirectional.t
 t/circular.t
+t/eof.t
+t/eol.t
 t/exceptions.t
 t/iterator.t
 t/pod-coverage.t
