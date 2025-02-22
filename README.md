@@ -4,7 +4,7 @@ Array::Iterator - A simple class for iterating over Perl arrays
 
 # VERSION
 
-Version 0.134
+Version 0.135
 
 # SYNOPSIS
 
@@ -296,6 +296,10 @@ Copyright 2004, 2005 by Infinity Interactive, Inc.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+# PREVIOUS MAINTAINER
+
+Maintained 2017 to 2025 PERLANCAR
 
 # SUPPORT
 
