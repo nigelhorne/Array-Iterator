@@ -1,10 +1,9 @@
-package Array::Iterator::BiDirectional;
+package Array::Iterator::LegacyBiDirectional;
 
 use strict;
 use warnings;
 
 use Array::Iterator;
-use Carp;
 
 # AUTHORITY
 # DATE
@@ -20,12 +19,10 @@ our $VERSION = '0.134';
 
 =head1 SYNOPSIS
 
-Occasionally it is useful for an iterator to go in both directions, forward and backward. One example would be token processing. When looping though tokens it is sometimes necessary to advance forward looking for a match to a rule. If the match fails, a bi-directional iterator can be moved back so that the next rule can be tried.
-
-  use Array::Iterator::BiDirectional;
+  use Array::Iterator::LegacyBiDirectional;
 
   # create an instance of the iterator
-  my $i = Array::Iterator::BiDirectional->new(1 .. 100);
+  my $i = Array::Iterator::LegacyBiDirectional->new(1 .. 100);
 
   while ($some_condition_exists) {
       # get the latest item from
@@ -38,6 +35,14 @@ Occasionally it is useful for an iterator to go in both directions, forward and 
       }
   }
 
+=head1 DESCRIPTION
+
+This is the old BiDirectional code.
+It is kept for users who want the old way that the pointer was kept.
+See RT#126034 for further details.
+
+Occasionally it is useful for an iterator to go in both directions, forward and backward. One example would be token processing. When looping though tokens it is sometimes necessary to advance forward looking for a match to a rule. If the match fails, a bi-directional iterator can be moved back so that the next rule can be tried.
+
 =cut
 
 our @ISA = qw(Array::Iterator);
@@ -45,43 +50,30 @@ our @ISA = qw(Array::Iterator);
 sub has_previous {
 	my ($self, $n) = @_;
 
-	if(not defined $n) { $n = 1 }
-	elsif(not $n)      { die "has_previous(0) doesn't make sense, did you mean current()?" }
-	elsif($n < 0)      { die "has_previous() with negative argument doesn't make sense, did you mean has_next()?" }
+    if(not defined $n) { $n = 1 }
+    elsif(not $n)      { die "has_previous(0) doesn't make sense, did you mean current()?" }
+    elsif($n < 0)      { die "has_previous() with negative argument doesn't make sense, did you mean has_next()?" }
 
-	my $idx = $self->_current_index - $n;
+    my $idx = $self->_current_index - $n;
 
-	if(!defined($self->{_iterated}) || ($self->{_iterated} >= 0)) {
-		return ($idx > 0) ? 1 : 0;
-	}
-	return ($idx >= 0) ? 1 : 0;
+	return ($idx > 0) ? 1 : 0;
 }
 
 sub hasPrevious { my $self = shift; $self->has_previous(@_) }
 
 sub previous {
-	my $self = shift;
-
-	if($self->{'_iterated'} >= 0) {
-		(($self->_current_index - 1) > 0) || Carp::croak('previous: Out Of Bounds: no more elements');
-	} else {
-		(($self->_current_index - 1) >= 0) || Carp::croak('previous: Out Of Bounds: no more elements');
-	}
-	$self->_iterated = -1;
+	my ($self) = @_;
+    (($self->_current_index - 1) > 0)
+        || die "Out Of Bounds : no more elements";
+        $self->_iterated = 1;
 	return $self->_getItem($self->_iteratee, --$self->_current_index);
 }
 
-sub get_previous
-{
-	my $self = shift;
-
-	return undef unless $self->hasPrevious(); ## no critic: Subroutines::ProhibitExplicitReturnUndef
-	if($self->_iterated == 1) {	# RT126034
-		--$self->{_current_index};
-	}
-	$self->_iterated = -1;
-	return undef unless $self->hasPrevious(); ## no critic: Subroutines::ProhibitExplicitReturnUndef
-	return $self->_getItem($self->_iteratee, --$self->{_current_index});
+sub get_previous {
+    my ($self) = @_;
+    return undef unless (($self->_current_index - 1) > 0); ## no critic: Subroutines::ProhibitExplicitReturnUndef
+    $self->_iterated = 1;
+    return $self->_getItem($self->_iteratee, --$self->_current_index);
 }
 
 sub getPrevious { my $self = shift; $self->get_previous(@_) }
@@ -96,12 +88,14 @@ sub look_back {
     my $idx = $self->_current_index - ($n + 1);
 
     return undef unless ($idx > 0); ## no critic: Subroutines::ProhibitExplicitReturnUndef
+    $self->_iterated = 1;
     return $self->_getItem($self->_iteratee, $idx);
 }
 
 sub lookBack { my $self = shift; $self->look_back(@_) }
 
 1;
+
 #ABSTRACT: A subclass of Array::Iterator to allow forwards and backwards iteration
 
 =for Pod::Coverage .+

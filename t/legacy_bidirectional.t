@@ -3,17 +3,17 @@
 use strict;
 use warnings;
 
-use Test::More tests => 51;
+use Test::More tests => 48;
 use Test::Exception;
 
-BEGIN { use_ok('Array::Iterator::BiDirectional') }
+BEGIN { use_ok('Array::Iterator::LegacyBiDirectional') };
 
 my @control = (1 .. 5);
 
-can_ok("Array::Iterator::BiDirectional", 'new');
-my $iterator = Array::Iterator::BiDirectional->new(@control);
+can_ok('Array::Iterator::LegacyBiDirectional', 'new');
+my $iterator = Array::Iterator::LegacyBiDirectional->new(@control);
 
-isa_ok($iterator, 'Array::Iterator::BiDirectional');
+isa_ok($iterator, 'Array::Iterator::LegacyBiDirectional');
 isa_ok($iterator, 'Array::Iterator');
 
 # check out public methods
@@ -29,8 +29,6 @@ can_ok($iterator, 'get_previous');
 
 # move our counter to the end
 $iterator->next() while $iterator->hasNext();
-
-ok(!$iterator->hasNext(), 'Have reached the end');
 
 for (my $i = $#control; $i > 0; $i--) {
     # we should still have another one
@@ -48,18 +46,14 @@ for (my $i = $#control; $i > 0; $i--) {
            '... our control should match our iterator->previous');
 }
 
-# we should have one more
-ok($iterator->hasPrevious(), '... we should have one left');
-cmp_ok($iterator->previous(), '==', 1, 'Back to the start');
-
 # we should have no more
 ok(!$iterator->hasPrevious(), '... we should have no more');
 
 # now use an array ref in the constructor
 # and try using it in this style loop
-my $iterator2 = Array::Iterator::BiDirectional->new(\@control);
+my $iterator2 = Array::Iterator::LegacyBiDirectional->new(\@control);
 
-isa_ok($iterator2, 'Array::Iterator::BiDirectional');
+isa_ok($iterator2, 'Array::Iterator::LegacyBiDirectional');
 isa_ok($iterator2, 'Array::Iterator');
 
 # move our iterator to the end
@@ -72,10 +66,11 @@ for (my $i = $iterator2; $i->hasPrevious(); $i->getPrevious()) {
 ok(!defined($iterator2->getPrevious()), '... this should return undef');
 
 throws_ok {
-	$iterator2->previous();
-} qr/Out Of Bounds\: no more elements/, '... this should die if i try again';
+    $iterator2->previous();
+} qr/Out Of Bounds \: no more elements/, '... this should die if i try again';
 
-my $iterator3 = Array::Iterator::BiDirectional->new(@control);
+
+my $iterator3 = Array::Iterator::LegacyBiDirectional->new(@control);
 
 # when not iterated()
 ok(!$iterator3->has_previous(1), '... should be the same as has_previous()');
