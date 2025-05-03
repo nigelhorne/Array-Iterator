@@ -100,8 +100,7 @@ sub new {
 		        unless ref $array[0]->{__array__} eq 'ARRAY';
 		    $_array = $array[0]->{__array__};
 		}
-	}
-	else {
+	} else {
 		$_array = \@array;
 	}
 	my $iterator = {
@@ -111,8 +110,7 @@ sub new {
 		_iterated => 0,	# -1 when going backwards, +1 when going forwards
         };
 	bless($iterator, $class);
-	$iterator->_init(scalar(@{$_array}), $_array);
-	return $iterator;
+	return $iterator->_init(scalar(@{$_array}), $_array);
 }
 
 sub _init {
@@ -125,6 +123,8 @@ sub _init {
 
 	# Store a private copy to prevent modifications
 	$self->{_iteratee} = [@{$iteratee}];
+
+	return $self;
 }
 
 =head2 _current_index
