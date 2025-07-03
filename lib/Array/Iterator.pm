@@ -188,8 +188,9 @@ Access to the _iterated status, for subclasses
 =cut
 
 sub iterated {
-    my ($self) = @_;
-    return $self->{_iterated};
+	my $self = shift;
+
+	return $self->{_iterated};
 }
 
 =head2 has_next([$n])
@@ -276,10 +277,11 @@ idiom instead.
 =cut
 
 sub get_next {
-    my ($self) = @_;
-    $self->{_iterated} = 1;
-    return undef unless ($self->{_current_index} < $self->{_length}); ## no critic: Subroutines::ProhibitExplicitReturnUndef
-    return $self->_getItem($self->{_iteratee}, $self->{_current_index}++);
+	my $self = shift;
+
+	$self->{_iterated} = 1;
+	return undef unless ($self->{_current_index} < $self->{_length}); ## no critic: Subroutines::ProhibitExplicitReturnUndef
+	return $self->_getItem($self->{_iteratee}, $self->{_current_index}++);
 }
 
 =head2 getNext
@@ -335,7 +337,7 @@ last value dispensed by C<next> or C<get_next>.
 =cut
 
 sub current {
-	my ($self) = @_;
+	my $self = shift;
 	return $self->_getItem($self->{_iteratee}, $self->currentIndex());
 }
 
@@ -348,7 +350,7 @@ of the last value dispensed by C<next> or C<get_next>.
 =cut
 
 sub current_index {
-	my ($self) = @_;
+	my $self = shift;
 	return ($self->{_current_index} != 0) ? $self->{_current_index} - 1 : 0;
 }
 
