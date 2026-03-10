@@ -20,61 +20,6 @@ our $VERSION = '0.135';
 
 our @ISA = qw(Array::Iterator);
 
-sub _init {
-	my ($self, $length, @args) = @_;
-
-	$self->{loop_counter} = 0;
-	$self->SUPER::_init($length, @args);
-}
-
-# always return true, since
-# we just keep looping
-sub has_next { 1 }
-
-sub next {
-	my $self = $_[0];
-
-	unless ($self->_current_index < $self->getLength()) {
-		$self->_current_index = 0;
-		$self->{loop_counter}++;
-	}
-        $self->_iterated = 1;
-	return $self->_getItem($self->_iteratee(), $self->_current_index++);
-}
-
-# since neither of them will
-# ever stop dispensing items
-# they can just be aliases of
-# one another.
-*get_next = \&next;
-
-sub is_start {
-    my ($self) = @_;
-    return ($self->_current_index() == 0);
-}
-
-sub isStart { my $self = shift; $self->is_start(@_) }
-
-sub is_end {
-    my ($self) = @_;
-    return ($self->_current_index() == $self->getLength());
-}
-
-sub isEnd { my $self = shift; $self->is_end(@_) }
-
-sub get_loop_count {
-    my ($self) = @_;
-    return $self->{loop_counter};
-}
-
-sub getLoopCount { my $self = shift; $self->get_loop_count(@_) }
-
-1;
-
-#ABSTRACT: A subclass of Array::Iterator to allow circular iteration
-
-=for Pod::Coverage .+
-
 =head1 SYNOPSIS
 
   use Array::Iterator::Circular;
@@ -134,6 +79,63 @@ If at anytime during your looping, you want to know if you have gotten to the en
 This method will tell you how many times the iterator has looped back to its start.
 
 =back
+
+=cut
+
+sub _init {
+	my ($self, $length, @args) = @_;
+
+	$self->{loop_counter} = 0;
+	$self->SUPER::_init($length, @args);
+}
+
+# always return true, since
+# we just keep looping
+sub has_next { 1 }
+
+sub next {
+	my $self = $_[0];
+
+	unless ($self->_current_index < $self->getLength()) {
+		$self->_current_index = 0;
+		$self->{loop_counter}++;
+	}
+	$self->_iterated = 1;
+	return $self->_getItem($self->_iteratee(), $self->_current_index++);
+}
+
+# since neither of them will
+# ever stop dispensing items
+# they can just be aliases of
+# one another.
+*get_next = \&next;
+
+sub is_start {
+	my $self = $_[0];
+
+	return ($self->_current_index() == 0);
+}
+
+sub isStart { my $self = shift; $self->is_start(@_) }
+
+sub is_end {
+	my $self = $_[0];
+
+	return ($self->_current_index() == $self->getLength());
+}
+
+sub isEnd { my $self = shift; $self->is_end(@_) }
+
+sub get_loop_count {
+	my $self = $_[0];
+
+	return $self->{loop_counter};
+}
+
+sub getLoopCount { my $self = shift; $self->get_loop_count(@_) }
+
+1;
+
 
 =head1 SEE ALSO
 
