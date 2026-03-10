@@ -21,9 +21,10 @@ our $VERSION = '0.135';
 our @ISA = qw(Array::Iterator);
 
 sub _init {
-    my ($self, @args) = @_;
-    $self->{loop_counter} = 0;
-    $self->SUPER::_init(@args);
+	my ($self, $length, @args) = @_;
+
+	$self->{loop_counter} = 0;
+	$self->SUPER::_init($length, @args);
 }
 
 # always return true, since
@@ -31,11 +32,12 @@ sub _init {
 sub has_next { 1 }
 
 sub next {
-	my ($self) = @_;
-    unless ($self->_current_index < $self->getLength()) {
-        $self->_current_index = 0;
-        $self->{loop_counter}++;
-    }
+	my $self = $_[0];
+
+	unless ($self->_current_index < $self->getLength()) {
+		$self->_current_index = 0;
+		$self->{loop_counter}++;
+	}
         $self->_iterated = 1;
 	return $self->_getItem($self->_iteratee(), $self->_current_index++);
 }
@@ -68,6 +70,7 @@ sub get_loop_count {
 sub getLoopCount { my $self = shift; $self->get_loop_count(@_) }
 
 1;
+
 #ABSTRACT: A subclass of Array::Iterator to allow circular iteration
 
 =for Pod::Coverage .+

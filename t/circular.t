@@ -24,7 +24,7 @@ can_ok($i, 'is_end');
 can_ok($i, 'getNext');
 can_ok($i, 'get_next');
 
-cmp_ok($i->size(), '==', 5, '5 elements in the array');
+cmp_ok($i->getLength(), '==', 5, '5 elements in the array');
 
 ok($i->isStart(), '... we are at the start of the array');
 

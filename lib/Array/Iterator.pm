@@ -99,6 +99,9 @@ sub new {
 		    die 'Incorrect type: __array__ value must be an ARRAY reference'
 		        unless ref $array[0]->{__array__} eq 'ARRAY';
 		    $_array = $array[0]->{__array__};
+		} else {
+			# One element array
+			$_array = \@array;
 		}
 	} else {
 		$_array = \@array;
@@ -125,19 +128,6 @@ sub _init {
 	$self->{_iteratee} = [@{$iteratee}];
 
 	return $self;
-}
-
-=head2 size
-
-Returns the number of elements in the array
-
-=cut
-
-sub size
-{
-	my $self = $_[0];
-
-	return $self->{_length};
 }
 
 =head2 _current_index
@@ -389,7 +379,8 @@ sub reset
 
 =head2 get_length
 
-This is a basic accessor for getting the length of the array being iterated over.
+This is a basic accessor for getting the length of the array being iterated over,
+returns the number of elements in the array.
 
 =cut
 

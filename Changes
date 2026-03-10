@@ -1,5 +1,5 @@
 0.136
-	Added size() method - GitHub#3
+	Correctly handle single element arrays (Fixes GitHub#4)
 
 0.135	Fri Feb 21 21:06:54 EST 2025
 	Added t/30-basics.t
