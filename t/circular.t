@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More tests => 46;
 
 BEGIN {
 	use_ok('Array::Iterator::Circular')
@@ -42,3 +42,18 @@ cmp_ok($i->getLoopCount(), '==', 5, '... we have looped 5 times');
 # this should be 1 past because of how the loop
 # above it structured, it is correct.
 cmp_ok($total_count, '==', 26, '... we have looped 5 times');
+
+# GitHub#4
+use Array::Iterator::Circular;
+
+my $chars = Array::Iterator::Circular->new('-', '-');
+
+for my $i (1..10) {
+	cmp_ok($chars->next(), 'eq', '-', "Element $i of 2 is -");
+}
+
+$chars = Array::Iterator::Circular->new('-');
+
+for my $i (1..10) {
+	cmp_ok($chars->next(), 'eq', '-', "Element $i of 1 is -");
+}
