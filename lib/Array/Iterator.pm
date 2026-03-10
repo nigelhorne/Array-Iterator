@@ -92,7 +92,7 @@ sub new {
 	my $_array;
 	if (scalar @array == 1) {
 		if (ref $array[0] eq 'ARRAY') {
-		    $_array = $array[0];
+			$_array = $array[0];
 		} elsif (ref $array[0] eq 'HASH') {
 		    die 'Incorrect type: HASH reference must contain the key __array__'
 		        unless exists $array[0]->{__array__};
@@ -115,8 +115,8 @@ sub new {
 
 sub _init {
 	my ($self, $length, $iteratee) = @_;
-	(defined($length) && defined($iteratee))
-		|| die 'Insufficient Arguments: you must provide an length and an iteratee';
+
+	(defined($length) && defined($iteratee)) || die 'Insufficient Arguments: you must provide an length and an iteratee';
 	$self->{_current_index} = 0;
 	$self->{_length} = $length;
 	# $self->{_iteratee} = $iteratee;
@@ -125,6 +125,19 @@ sub _init {
 	$self->{_iteratee} = [@{$iteratee}];
 
 	return $self;
+}
+
+=head2 size
+
+Returns the number of elements in the array
+
+=cut
+
+sub size
+{
+	my $self = $_[0];
+
+	return $self->{_length};
 }
 
 =head2 _current_index

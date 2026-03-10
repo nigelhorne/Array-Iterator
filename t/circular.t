@@ -3,13 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 26;
 
 BEGIN {
-    use_ok('Array::Iterator::Circular')
+	use_ok('Array::Iterator::Circular')
 };
 
-can_ok("Array::Iterator::Circular", 'new');
+can_ok('Array::Iterator::Circular', 'new');
 
 my $i = Array::Iterator::Circular->new(1 .. 5);
 isa_ok($i, 'Array::Iterator::Circular');
@@ -23,6 +23,8 @@ can_ok($i, 'isEnd');
 can_ok($i, 'is_end');
 can_ok($i, 'getNext');
 can_ok($i, 'get_next');
+
+cmp_ok($i->size(), '==', 5, '5 elements in the array');
 
 ok($i->isStart(), '... we are at the start of the array');
 
