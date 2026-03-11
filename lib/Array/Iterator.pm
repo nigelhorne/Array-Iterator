@@ -9,11 +9,11 @@ Array::Iterator - A simple class for iterating over Perl arrays
 
 =head1 VERSION
 
-Version 0.135
+Version 0.136
 
 =cut
 
-our $VERSION = '0.135';
+our $VERSION = '0.136';
 
 =head1 SYNOPSIS
 
@@ -508,6 +508,12 @@ the more advanced features of this module.
 through the hash-ref constructor parameter.
 
 =back
+
+=head1 MAINTAINER
+
+Nigel Horne, C<< <njh at nigelhorne.com> >>
+
+2025-2026
 
 =head1 ORIGINAL AUTHOR
 

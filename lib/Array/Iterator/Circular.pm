@@ -1,4 +1,3 @@
-
 package Array::Iterator::Circular;
 
 use strict;
@@ -12,11 +11,11 @@ use Array::Iterator;
 
 =head1 VERSION
 
-Version 0.135
+Version 0.136
 
 =cut
 
-our $VERSION = '0.135';
+our $VERSION = '0.136';
 
 our @ISA = qw(Array::Iterator);
 
@@ -140,6 +139,12 @@ sub getLoopCount { my $self = shift; $self->get_loop_count(@_) }
 =head1 SEE ALSO
 
 This is a subclass of B<Array::Iterator>, please refer to it for more documentation.
+
+=head1 MAINTAINER
+
+Nigel Horne, C<< <njh at nigelhorne.com> >>
+
+2025-2026
 
 =head1 ORIGINAL AUTHOR
 
